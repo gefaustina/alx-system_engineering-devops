@@ -1,9 +1,8 @@
-#!/usr/bin/env bash
-# Install nginx on web server; Nginx should be listening on port 80
-
-sudo apt-get -y update
-sudo apt-get -y install nginx
-sudo ufw allow "Nginx HTTP"
-sudo chown -R $USER:$USER /var/www/html/index.nginx-debian.html
-sudo echo "Hello World!" > /var/www/html/index.nginx-debian.html
-sudo service nginx restart
+@@ -2,6 +2,5 @@
+# configures a new Ubuntu machine to respecting requirements
+apt-get update
+apt-get -y install nginx
+echo "Holberton School" > /var/www/html/index
+rm replace
+echo "Holberton School" > /var/www/html/index.html
+service nginx start
