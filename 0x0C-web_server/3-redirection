@@ -17,8 +17,10 @@ echo "Hello World!" > /var/www/html/index.html
 printf %s "server {
     listen		80 default_server;
     listen		[::]:80 default_server;
+
     root		/var/www/html;
     index		index.html index.htm index.nginx-debian.html;
+
     location /redirect_me {
         return 301 https://www.youtube.com/watch?v=TfgBHC5gvTI;
     }
@@ -26,4 +28,3 @@ printf %s "server {
 " > /etc/nginx/sites-available/default
 
 service nginx restart
-
