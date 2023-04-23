@@ -1,0 +1,20 @@
+What happens when you type https://www.google.com in your browser and press Enter
+When you type https://www.google.com in your browser and press Enter, a series of events occur behind the scenes to bring up the webpage on your screen. From DNS request to database queries, each step is critical to ensure a fast, secure, and reliable browsing experience. Let’s take a closer look at what happens when you enter a URL in your browser.
+DNS Request
+The first step in loading a webpage is converting the domain name into an IP address. The Domain Name System (DNS) is responsible for translating domain names into IP addresses that computers can understand. Your browser sends a DNS request to a DNS server to get the IP address of the server hosting the website you want to visit. The DNS server replies with the IP address of the server.
+TCP/IP
+Once your browser has the IP address of the server, it initiates a connection using the Transmission Control Protocol/Internet Protocol (TCP/IP). TCP is responsible for establishing a connection between two computers and ensuring that data is delivered reliably. IP, on the other hand, is responsible for routing data across the internet.
+Firewall
+The next step is passing the request through a firewall, which is a network security system that monitors and controls incoming and outgoing traffic based on predefined security rules. The firewall checks the request to see if it meets the rules, such as blocking requests from certain IP addresses or preventing access to certain ports.
+HTTPS/SSL
+Once the request passes through the firewall, your browser and the server engage in a handshake to establish a secure communication channel using HTTPS (Hypertext Transfer Protocol Secure) and SSL (Secure Sockets Layer) or its successor, TLS (Transport Layer Security). HTTPS is a secure version of HTTP that uses SSL/TLS to encrypt the data exchanged between your browser and the server, preventing eavesdropping or tampering.
+Load-balancer
+The next step is load balancing, which distributes incoming traffic across multiple servers to improve website availability, scalability, and performance. A load balancer acts as a reverse proxy, sitting between your browser and the server, and distributing requests based on various algorithms such as round-robin, least connections, or IP hash.
+Web Server
+Once the request is load balanced, the web server software running on the server retrieves the requested resource, such as an HTML page, an image, or a script. The web server processes the request and generates a response, which is sent back to your browser using the established HTTPS connection.
+Application Server
+If the requested resource is dynamic, that is, it needs to be generated on-the-fly based on user input or data stored in a database, then the request is forwarded to an application server. An application server is a software framework that runs dynamic applications, such as web applications, business logic, or middleware. The application server generates the dynamic content and sends it back to the web server, which then sends it to your browser.
+Database
+If the application server needs to retrieve data from a database, it sends a query to the database server, which returns the requested data. A database server is a computer program that stores, retrieves, and manages data in a database. The database server can be running on the same machine as the application server or on a separate machine.
+Conclusion
+In conclusion, when you type https://www.google.com in your browser and press Enter, a complex series of events take place to bring up the webpage on your screen. The DNS request translates the domain name into an IP address, TCP/IP establishes a connection between your browser and the server, the firewall checks the request against predefined rules, HTTPS/SSL establishes a secure communication channel, load balancing distributes traffic across multiple servers, the web server retrieves the requested resource, the application server generates dynamic content based on user input or data stored in a database, and the database server retrieves the requested.
