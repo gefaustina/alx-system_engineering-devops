@@ -1,63 +1,61 @@
 #!/usr/bin/python3
-""" Module for storing the count_words function. """
-from requests import get
+""" Functions to adcquire info from API Reddit"""
+import requests
+after = None
 
 
-def count_words(subreddit, word_list, word_count=[], page_after=None):
-    """
-    Prints the count of the given words present in the title of the
-    subreddit's hottest articles.
-    """
-    headers = {'User-Agent': 'HolbertonSchool'}
+def count_words(subreddit, word_list):
+    """Count the titles found with wordlist in subreddit"""
+    my_list = recurse(subreddit)
+    my_dict = {}
 
-    word_list = [word.lower() for word in word_list]
-
-    if bool(word_count) is False:
+    if my_list:
         for word in word_list:
-            word_count.append(0)
+            my_dict[word] = 0
 
-    if page_after is None:
-        url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
-        r = get(url, headers=headers, allow_redirects=False)
-        if r.status_code == 200:
-            for child in r.json()['data']['children']:
-                i = 0
-                for i in range(len(word_list)):
-                    for word in [w for w in child['data']['title'].split()]:
-                        word = word.lower()
-                        if word_list[i] == word:
-                            word_count[i] += 1
-                    i += 1
+        for title in my_list:
+            title_split = title.split(" ")
 
-            if r.json()['data']['after'] is not None:
-                count_words(subreddit, word_list,
-                            word_count, r.json()['data']['after'])
+            for iter in title_split:
+                for iter_split in word_list:
+                    if iter.lower() == iter_split.lower():
+                        my_dict[iter_split] += 1
+
+        for key, val in sorted(my_dict.items(),  key=lambda x: x[1],
+                               reverse=True):
+            if val != 0:
+                print("{}: {}".format(key, val))
+
+
+def recurse(subreddit, hot_list=[]):
+    """ recurse is a function that return hot list from
+        a subreddit"""
+    global after
+    headers = {'User-Agent': 'ledbag123'}
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    parameters = {'after': after}
+    response = requests.get(url, headers=headers, allow_redirects=False,
+                            params=parameters)
+    if response.status_code == 200:
+        prox = response.json().get('data').get('after')
+
+        if prox is not None:
+            after = prox
+            recurse(subreddit, hot_list)
+        list_titles = response.json().get('data').get('children')
+
+        for title_ in list_titles:
+            hot_list.append(title_.get('data').get('title'))
+        return hot_list
     else:
-        url = ('https://www.reddit.com/r/{}/hot.json?after={}'
-               .format(subreddit,
-                       page_after))
-        r = get(url, headers=headers, allow_redirects=False)
-
-        if r.status_code == 200:
-            for child in r.json()['data']['children']:
-                i = 0
-                for i in range(len(word_list)):
-                    for word in [w for w in child['data']['title'].split()]:
-                        word = word.lower()
-                        if word_list[i] == word:
-                            word_count[i] += 1
-                    i += 1
-            if r.json()['data']['after'] is not None:
-                count_words(subreddit, word_list,
-                            word_count, r.json()['data']['after'])
-            else:
-                dicto = {}
-                for key_word in list(set(word_list)):
-                    i = word_list.index(key_word)
-                    if word_count[i] != 0:
-                        dicto[word_list[i]] = (word_count[i] *
-                                               word_list.count(word_list[i]))
-
-                for key, value in sorted(dicto.items(),
-                                         key=lambda x: (-x[1], x[0])):
-                    print('{}: {}'.format(key, value))
+        return (None)
+'''    
+#!/usr/bin/python3
+""" Exporting csv files"""
+import json
+import requests
+@@ -36,3 +88,4 @@ def count_words(subreddit, word_list, after="null", host_list=[]):
+                print("{}: {}".format(word_list[pos], my_count[pos]))
+    else:
+        return(None)
+'''
