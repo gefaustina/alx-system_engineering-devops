@@ -1,47 +1,29 @@
-#!/usr/bin/python3
-"""Module for task 3"""
+import requests
 
-
-def count_words(subreddit, word_list, word_count={}, after=None):
-    """Queries the Reddit API and returns the count of words in
-    word_list in the titles of all the hot posts
-    of the subreddit"""
-    import requests
-
-    sub_info = requests.get("https://www.reddit.com/r/{}/hot.json"
-                            .format(subreddit),
-                            params={"after": after},
-                            headers={"User-Agent": "My-User-Agent"},
-                            allow_redirects=False)
-    if sub_info.status_code != 200:
-        return None
-
-    info = sub_info.json()
-
-    hot_l = [child.get("data").get("title")
-             for child in info
-             .get("data")
-             .get("children")]
-    if not hot_l:
-        return None
-
-    word_list = list(dict.fromkeys(word_list))
-
-    if word_count == {}:
-        word_count = {word: 0 for word in word_list}
-
-    for title in hot_l:
-        split_words = title.split(' ')
+def count_words(subreddit, word_list, count_dict=None):
+    if count_dict is None:
+        count_dict = {}
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+    response = requests.get(url, headers=headers, allow_redirects=False)
+    if response.status_code != 200:
+        return
+    data = response.json()
+    for post in data["data"]["children"]:
+        title = post["data"]["title"].lower()
         for word in word_list:
-            for s_word in split_words:
-                if s_word.lower() == word.lower():
-                    word_count[word] += 1
-
-    if not info.get("data").get("after"):
-        sorted_counts = sorted(word_count.items(), key=lambda kv: kv[0])
-        sorted_counts = sorted(word_count.items(),
-                               key=lambda kv: kv[1], reverse=True)
-        [print('{}: {}'.format(k, v)) for k, v in sorted_counts if v != 0]
+            if (f" {word.lower()} " in title or
+                title.startswith(f"{word.lower()} ") or
+                title.endswith(f" {word.lower()}") or
+                title == word.lower()):
+                count_dict[word.lower()] = count_dict.get(word.lower(), 0) + 1
+    if data["data"]["after"] is not None:
+        count_words(subreddit, word_list, count_dict)
     else:
-        return count_words(subreddit, word_list, word_count,
-                           info.get("data").get("after"))
+        count_list = [(count, word) for word, count in count_dict.items()]
+        count_list.sort(key=lambda x: (-x[0], x[1]))
+        for count, word in count_list:
+            print(f"{word}: {count}")
+
+# example usage
+count_words("learnprogramming", ["python", "javascript", "java"])
